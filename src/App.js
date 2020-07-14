@@ -1,26 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import youtube from "./api/youtube";
 
-function App() {
+import { Grid } from "@material-ui/core";
+
+import { SearchBar, VideoDetails , VideoList } from "./components";
+
+const App = () => {
+  const [video, setVideo] = useState([]);
+  const [selectedVideo, setSelectedVideo] = useState(null);
+
+  async function handleSubmit(searchTerm) {
+    try {
+      const response = await youtube.get("search", {
+        params: {
+          part: "snippet",
+          maxResults: 5,
+          key: "AIzaSyBE7BMs2QcYGfiwwFnTju0b8lDtdGcwiCs",
+          q: searchTerm,
+        },
+      });
+
+      console.log(response.data.items);
+        console.log(response.data.items[0]);
+      setVideo(response.data.items);
+      setSelectedVideo(response.data.items[0]);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Grid justify="center" container spacing={10}>
+        <Grid item xs={12}>
+          <Grid container spacing={10}>
+            <Grid item xs={12}>
+              <SearchBar onSubmit={handleSubmit} />
+            </Grid>
+            <Grid item xs={8}>
+              <VideoDetails video={selectedVideo} />
+            </Grid>
+            <Grid item xs={4}>
+              <VideoList video={video} onVideoSelect={setSelectedVideo}/>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+    </>
   );
-}
+};
 
 export default App;
