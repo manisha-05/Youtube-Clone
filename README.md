@@ -4,7 +4,6 @@
 
 ## See it Live [here](https://youtube-clone2.netlify.app/)
 ---
-___
 
 
 ### Setup:
